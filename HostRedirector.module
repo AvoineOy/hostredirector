@@ -20,7 +20,7 @@ class HostRedirector extends WireData implements Module, ConfigurableModule {
 		return [
 			'title'   => 'Host Redirector',
       'author'  => 'Avoine Oy',
-			'version' => '1.1.0',
+			'version' => '1.1.1',
 			'summary' => 'A host based redirect router.',
 			'singular' => true,
 			'autoload' => true,
@@ -175,6 +175,7 @@ class HostRedirector extends WireData implements Module, ConfigurableModule {
    *
    */
 	static public function getModuleConfigInputfields(array $data) {
+    $routes = isset($data['routes']) ? $data['routes'] : '';
 
 		$fields = new InputfieldWrapper();
 
@@ -185,7 +186,7 @@ class HostRedirector extends WireData implements Module, ConfigurableModule {
     $field->description.= "\n\nExample 1: **catcampaign.com /cats x** would redirect **http://catcampaign.com/lions** to **http://www.mysite.com/cats/lions**.";
     $field->description.= "\nExample 2: **mysite.com /** would redirect **http://mysite.com/foobar** to **http://www.mysite.com/**.";
 		$field->notes = "IMPORTANT: httpHosts must be defined in the config. Start all paths with '/'. Do not include a path in request_host. If you wish to append the request path, place an 'x' as the last field. Even if PW is running under a directory other than the root, do not include it, it will be added as necessary. Trailing forward slash will be added automatically to all target_paths.";
-		$field->attr('value', $data['routes']);
+		$field->attr('value', $routes);
 		$fields->add($field);
 
 		return $fields;
