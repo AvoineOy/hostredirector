@@ -1,17 +1,14 @@
 <?php
 
-/*
- *
- * TODO:
- *
- *   - Remove caching stuff and always write the serialized data to the module's config
- *     (not sure if it's a bit dirty though, since PW stores the data as JSON)
- *
- */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                                                     *
+ *                                                     *
+ * The one and only amazing Avoine Redirector [CBAP]!  *
+ *                                                     *
+ *                                                     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ 
 class AvoineRedirector extends WireData implements Module, ConfigurableModule {
-  protected $cacheKeyName = 'AvoineRedirector.routes';
-  protected $cacheTtl = 3600;
-
   /*
    *
    *
@@ -40,7 +37,7 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
     // Redirecting will be done here
     $this->addHookBefore('ProcessPageView::execute', $this, 'router');
     // Auto update cache on module config save will be done here
-    $this->addHookAfter('Modules::saveModuleConfigData', $this, 'updateRoutesCache');
+    $this->addHookAfter('Modules::saveModuleConfigData', $this, 'updateRoutes');
 	}
   
   /*
@@ -52,12 +49,10 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
    */
   public function router(HookEvent $event) {
     // Read routes from cache while automatically caching when it's expired
-    $routes = $this->cacheGet($this->cacheKeyName, $this->cacheTtl, function() {
-      return $this->getParsedRoutes($this->routes);
-    });
+    $routes = $this->routesArray;
 
     // Fast exist for misconfigured module
-    if(count($routes) === 0) {
+    if(!is_array($routes) or count($routes) === 0) {
       return;
     }
     
@@ -79,17 +74,24 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
       $this->session->redirect($url);  
     }
   }
-  
+
   /*
    *
    *
-   * Hook to execute on module config save
+   * Hook method which updates the routes array to the module's config
    *
    *
    */
-  public function updateRoutesCache(HookEvent $e) {
-    // Updates cache based on the event arguments
-    $this->cacheSave($this->cacheKeyName, $this->getParsedRoutes($e->arguments(1)['routes']), $this->cacheTtl);
+  public function updateRoutes(HookEvent $event) {
+    $currentConfig = $event->arguments(1);
+    
+    // Append the parsed array to the module's config
+    $newConfig = array_merge($currentConfig, [
+      'routesArray' => $this->getParsedRoutes($currentConfig['routes']),
+    ]);
+    
+    // Call PW's method directly to avoid executing hooks again
+    $this->modules->___saveModuleConfigData(__CLASS__, $newConfig);
   }
   
   /*
@@ -161,94 +163,6 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
     }
     
     return $routes;
-  }
-  
-  /*
-   *
-   *
-   * Caching related methods start here, which were added due $cache API missing in PW 2.4
-   *
-   *
-   */
-  
-  protected function getCachePath($key) {
-    // Cached items are stored under /tmp
-    return $fullpath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'AvoineCache.' . $key;
-  }
-  
-  protected function cacheGet($key, $ttl = false, $function = false) {
-    // Validate arguments
-    if($function !== false and !is_callable($function)) {
-      throw new WireException('$function must be callable');
-    } elseif($ttl !== false and !is_int($ttl)) {
-      throw new WireException('$ttl must be an int');
-    }
-    
-    $fullpath = $this->getCachePath($key);
-    
-    // Check if we have something cached
-    if(!file_exists($fullpath)) {
-      // Cache file does not exist, so check if the user supplied a generator function
-      if($function !== false) {
-        // Generator was given so update cache and return data
-        $data = $function();
-        $this->cacheSave($key, $data, $ttl);
-        return $data;
-      } else {
-        // Otherwise we let the user know there's nothing in the cache
-        return null;
-      }
-    } else {
-      // Get raw contents from the cache file
-      $contents = file_get_contents($fullpath);
-      
-      if($contents === false) {
-        throw new WireException('Unable to get cache contents');
-      }
-      
-      $cacheItem = unserialize($contents);
-      
-      // Validate the unserialized array
-      if(!is_array($cacheItem) or !isset($cacheItem['ttl']) or !isset($cacheItem['timestamp'])) {
-        // Corrupted cache, removing
-        if(!unlink($fullpath)) {
-          throw new WireException('Unable to remove cache');
-        }
-        // Attempt again
-        return $this->cacheGet($key, $ttl, $function);
-      }
-      
-      if(time() - $cacheItem['timestamp'] > $cacheItem['ttl']) {
-        // Cache has expired
-        if(!unlink($fullpath)) {
-          throw new WireException('Unable to remove cache');
-        }
-        // Attempt again
-        return $this->cacheGet($key, $ttl, $function);
-      } else {
-        // Yay, cached data was found.
-        return $cacheItem['data'];
-      }
-    }
-  }
-  
-  protected function cacheSave($key, $data, $ttl = false) {
-    if($ttl === false) {
-      // Default to one hour
-      $ttl = 3600;
-    } elseif(!is_int($ttl)) {
-      throw new WireException('$ttl must be an int');
-    }
-    
-    $cachedItem = [
-      'ttl'       => $ttl,
-      'timestamp' => time(),
-      'data'      => $data,
-    ];
-    
-    if(file_put_contents($this->getCachePath($key), serialize($cachedItem)) === false) {
-      throw new WireException('Unable to save cache');
-    }
   }
   
   /*
