@@ -18,9 +18,10 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
    */
 	public static function getModuleInfo() {
 		return [
-			'title' => 'Avoine Redirector',
-			'version' => '1.0.0',
-			'summary' => 'A static host based redirect router.',
+			'title'   => 'Avoine Redirector',
+      'author'  => 'Avoine Oy',
+			'version' => '1.1.0',
+			'summary' => 'A host based redirect router.',
 			'singular' => true,
 			'autoload' => true,
     ];
@@ -68,7 +69,8 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
     if(isset($routes[$host])) {
       list($url, $append) = $routes[$host];
       if($append) {
-        // Append the path to the target_path
+        // Append the path to the target_path (while removing leading forward slash
+        // since it's always added by the "parser")
         $url.= ltrim($_SERVER['REQUEST_URI'], '/');
       }
       $this->session->redirect($url);  
