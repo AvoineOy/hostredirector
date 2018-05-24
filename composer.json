@@ -12,6 +12,18 @@
             "homepage": "http://github.com/AvoineOy"
         }
     ],
+    "scripts": {
+      "post-install-cmd": [
+        "rm -fr public/site/modules/HostRedirector",
+        "mkdir public/site/modules/HostRedirector",
+        "cp vendor/AvoineOy/HostRedirector/HostRedirector.module public/site/modules/HostRedirector"
+      ],
+      "post-update-cmd": [
+        "rm -fr public/site/modules/HostRedirector",
+        "mkdir public/site/modules/HostRedirector",
+        "cp vendor/AvoineOy/HostRedirector/HostRedirector.module public/site/modules/HostRedirector"
+      ]
+    },
     "require": {
         "php": ">=5.6.0",
         "processwire/processwire": ">=2.4.0"
