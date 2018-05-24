@@ -3,12 +3,12 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                                                     *
  *                                                     *
- * The one and only amazing Avoine Redirector [CBAP]!  *
+ * The one and only amazing Host Redirector [CBAP]!  *
  *                                                     *
  *                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  
-class AvoineRedirector extends WireData implements Module, ConfigurableModule {
+class HostRedirector extends WireData implements Module, ConfigurableModule {
   /*
    *
    *
@@ -18,7 +18,7 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
    */
 	public static function getModuleInfo() {
 		return [
-			'title'   => 'Avoine Redirector',
+			'title'   => 'Host Redirector',
       'author'  => 'Avoine Oy',
 			'version' => '1.1.0',
 			'summary' => 'A host based redirect router.',
