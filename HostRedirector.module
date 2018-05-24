@@ -20,7 +20,7 @@ class HostRedirector extends WireData implements Module, ConfigurableModule {
     return [
       'title'   => 'Host Redirector',
       'author'  => 'Avoine Oy',
-      'version' => '1.1.1',
+      'version' => '1.1.2',
       'summary' => 'A host based redirect router.',
       'singular' => true,
       'autoload' => true,
@@ -58,7 +58,7 @@ class HostRedirector extends WireData implements Module, ConfigurableModule {
     }
     
     // Use strtolower to avoid case problems
-    $host = strtolower($this->config->httpHost);
+    $host = strtolower($_SERVER['HTTP_HOST']);
     
     // Quick exist if the request is made against the main host
     if($routes[0] === $host) {
