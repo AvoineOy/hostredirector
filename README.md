@@ -26,12 +26,12 @@ Do these in your project's composer.json:
     "scripts": {
       "post-install-cmd": [
         "rm -fr public/site/modules/HostRedirector",
-        "mkdir public/site/modules/HostRedirector",
+        "mkdir -p public/site/modules/HostRedirector",
         "cp vendor/AvoineOy/HostRedirector/HostRedirector.module public/site/modules/HostRedirector"
       ],
       "post-update-cmd": [
         "rm -fr public/site/modules/HostRedirector",
-        "mkdir public/site/modules/HostRedirector",
+        "mkdir -p public/site/modules/HostRedirector",
         "cp vendor/AvoineOy/HostRedirector/HostRedirector.module public/site/modules/HostRedirector"
       ]
     },
