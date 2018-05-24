@@ -181,7 +181,9 @@ class AvoineRedirector extends WireData implements Module, ConfigurableModule {
 		$field = wire('modules')->get("InputfieldTextarea");
 		$field->name = "routes";
 		$field->label = "Redirect routes";
-		$field->description = "Add each redirect route on it's own line. Use syntax <request_host> <target_path> [<append>]";
+		$field->description = "Add each redirect route on it's own line. Syntax: **<request_host> <target_path> [<append>]**";
+    $field->description.= "\n\nExample 1: **catcampaign.com /cats x** would redirect **http://catcampaign.com/lions** to **http://www.mysite.com/cats/lions**.";
+    $field->description.= "\nExample 2: **mysite.com /** would redirect **http://mysite.com/foobar** to **http://www.mysite.com/**.";
 		$field->notes = "IMPORTANT: httpHosts must be defined in the config. Start all paths with '/'. Do not include a path in request_host. If you wish to append the request path, place an 'x' as the last field. Even if PW is running under a directory other than the root, do not include it, it will be added as necessary. Trailing forward slash will be added automatically to all target_paths.";
 		$field->attr('value', $data['routes']);
 		$fields->add($field);
