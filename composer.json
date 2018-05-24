@@ -1,0 +1,19 @@
+{
+    "name": "AvoineOy/hostredirector",
+    "description": "A simple host based redirector module for ProcessWire",
+    "keywords": ["redirect", "processwire"],
+    "homepage": "http://github.com/AvoineOy/hostredirector",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Avoine Oy",
+            "email": "github@avoine.fi",
+            "homepage": "http://github.com/AvoineOy"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "processwire/processwire": ">=2.4.0"
+    }
+}
