@@ -20,7 +20,7 @@ class HostRedirector extends WireData implements Module, ConfigurableModule {
     return [
       'title'   => 'Host Redirector',
       'author'  => 'Avoine Oy',
-      'version' => '1.1.2',
+      'version' => '2.0.0',
       'summary' => 'A host based redirect router.',
       'singular' => true,
       'autoload' => true,

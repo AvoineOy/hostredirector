@@ -6,35 +6,10 @@ A simple host based redirector module for ProcessWire that's aimed to support ad
 Installation
 ------------
 
-Do these in your project's composer.json:
-
-1) Add `"AvoineOy/hostredirector": "dev-master"` to your requires
-
-2) Add the repository as follows:
+Install the module via Composer:
 
 ```
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/AvoineOy/hostredirector"
-    }
-  ],
+composer require avoineoy/hostredirector
 ```
 
-3) Add these scripts:
-```
-    "scripts": {
-      "post-install-cmd": [
-        "rm -fr public/site/modules/HostRedirector",
-        "mkdir -p public/site/modules/HostRedirector",
-        "cp vendor/AvoineOy/HostRedirector/HostRedirector.module public/site/modules/HostRedirector"
-      ],
-      "post-update-cmd": [
-        "rm -fr public/site/modules/HostRedirector",
-        "mkdir -p public/site/modules/HostRedirector",
-        "cp vendor/AvoineOy/HostRedirector/HostRedirector.module public/site/modules/HostRedirector"
-      ]
-    },
-```
-
-4) Add /public/site/modules/HostRedirector to .gitignore
+When installing via Composer, it is recommended that you also add the module directory (usually /site/modules/HostRedirector) to .gitignore file.
